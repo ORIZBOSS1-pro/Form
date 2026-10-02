@@ -1,40 +1,83 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const contactForm = document.getElementById('contact-form');
+  const form = document.getElementById('contact-form');
   const submitBtn = document.getElementById('submit-btn');
+  const btnText = submitBtn.querySelector('.btn-text');
+  const messageInput = document.getElementById('message');
+  const charCount = document.getElementById('char-count');
+  const statusDiv = document.getElementById('form-status');
 
-  if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); // Stop default browser redirect
+  // Real-time Character Counter
+  const maxChars = 500;
+  messageInput.addEventListener('input', () => {
+    const currentLength = messageInput.value.length;
+    charCount.textContent = currentLength;
 
-      // Provide visual feedback while sending
+    if (currentLength > maxChars) {
+      charCount.style.color = 'var(--error-color)';
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
+    } else {
+      charCount.style.color = 'var(--text-muted)';
+      submitBtn.disabled = false;
+    }
+  });
 
-      const formData = new FormData(contactForm);
+  // Client-Side Email Validation helper
+  function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  }
 
-      try {
-        const response = await fetch(contactForm.action, {
-          method: contactForm.method,
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
+  // Handle Form Submission via AJAX (fetch API)
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent page refresh
 
-        if (response.ok) {
-          // Success alert message
-          alert('Success! Your message has been sent successfully.');
-          contactForm.reset();
-        } else {
-          alert('Oops! There was a problem submitting your form.');
+    const emailInput = document.getElementById('email').value.trim();
+    
+    // Quick validation check
+    if (!isValidEmail(emailInput)) {
+      showStatus('Please enter a valid email address.', 'error');
+      return;
+    }
+
+    // Update UI state for pending submission
+    submitBtn.disabled = true;
+    btnText.textContent = 'Sending...';
+    statusDiv.style.display = 'none';
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
         }
-      } catch (error) {
-        alert('Oops! Network error. Please try again later.');
-      } finally {
-        // Reset button state
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
+      });
+
+      if (response.ok) {
+        showStatus('Thank you! Your message has been sent successfully.', 'success');
+        form.reset();
+        charCount.textContent = '0';
+      } else {
+        const data = await response.json();
+        if (data.hasOwnProperty('errors')) {
+          showStatus(data['errors'].map(error => error['message']).join(', '), 'error');
+        } else {
+          showStatus('Oops! There was a problem submitting your form.', 'error');
+        }
       }
-    });
+    } catch (error) {
+      showStatus('Oops! A network error occurred. Please try again.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      btnText.textContent = 'Send Message';
+    }
+  });
+
+  function showStatus(msg, type) {
+    statusDiv.className = `form-status ${type}`;
+    statusDiv.textContent = msg;
+    statusDiv.style.display = 'block';
   }
 });
