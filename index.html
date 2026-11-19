@@ -4,82 +4,194 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- FontAwesome for UI Icons -->
+<!-- PWA & Mobile Settings -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ORIZBOSS">
+<link rel="apple-touch-icon" href="pic.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="form-container">
-<div class="form-header">
-<span class="badge">Customer Service</span>
-<h2>Get in Touch</h2>
-<p>Fill out the form to send us a direct message, and our team will get back to you shortly.</p>
-</div>
+  <div class="form-container">
+    <div class="form-header">
+      <span class="badge">Customer Service</span>
+      <h2>Get in Touch</h2>
+      <p>Fill out the form below with as much detail as possible, and our team will get back to you shortly.</p>
+    </div>
 
-<!-- Formspree Endpoint Attached -->
-<form id="contact-form" action="https://formspree.io/f/xbglkzyk" method="POST" enctype="multipart/form-data">
-      
-<div class="form-row">
-<div class="form-group">
-<label for="name">Full Name <span class="required">*</span></label>
-<div class="input-icon-wrapper">
-  <i class="fa-regular fa-user input-icon"></i>
-<input type="text" id="name" name="name" placeholder="Enter Fullname" required>
-</div>
-  <span class="error-msg" id="name-error"></span>
-</div>
+    <!-- Formspree Endpoint Attached (multipart/form-data enabled for file attachments) -->
+    <form id="contact-form" action="https://formspree.io/f/xbglkzyk" method="POST" enctype="multipart/form-data" novalidate>
+      <!-- Honeypot field to prevent spam -->
+      <input type="text" name="_gotcha" style="display:none">
 
-<div class="form-group">
-<label for="email">Email Address <span class="required">*</span></label>
-<div class="input-icon-wrapper">
-  <i class="fa-regular fa-envelope input-icon"></i>
-  <input type="email" id="email" name="email" placeholder="john@example.com" required>
-</div>
-  <span class="error-msg" id="email-error"></span>
-</div>
-</div>
+      <!-- Row 1: Name & Email -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Full Name <span class="required">*</span></label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input type="text" id="name" name="name" placeholder="Jane Doe" required>
+          </div>
+          <span class="error-msg" id="name-error"></span>
+        </div>
 
-<div class="form-row">
-  <div class="form-group">
- <label for="phone">Phone Number</label>
- <div class="input-icon-wrapper">
-  <i class="fa-solid fa-phone input-icon"></i>
-  <input type="tel" id="phone" name="phone" placeholder="+234 (012) 345-6789">
-  </div>
-  </div>
-<div class="form-group">
-  <label for="service">Inquiry Category</label>
-<div class="input-icon-wrapper">
-  <i class="fa-solid fa-layer-group input-icon"></i>
-  <select id="service" name="service">
-    <option value="General Inquiry">General Inquiry</option>
-    <option value="Technical Support">Technical Support</option>
-    <option value="Billing & Orders">Billing & Orders</option>
-    <option value="Feedback">Feedback / Suggestions</option>
-  </select>
-</div>
-</div>
-</div>
-<div class="form-group">
-  <label for="subject">Subject <span class="required">*</span></label>
-  <div class="input-icon-wrapper">
-  <i class="fa-regular fa-bookmark input-icon"></i>
-  <input type="text" id="subject" name="subject" placeholder="Project Inquiry" required>
-  </div>
-  <span class="error-msg" id="subject-error"></span>
-</div>
-<div class="form-group">
- <label for="message">Your Message <span class="required">*</span></label>
- <textarea id="message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
- <div class="char-counter"><span id="char-count">0</span> / 500</div>
- <span class="error-msg" id="message-error"></span>
-</div>
-  <button type="submit" id="submit-btn" class="btn"><span class="btn-text">Send Message</span><i class="fa-solid fa-paper-plane"></i></button>
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" placeholder="jane@example.com" required>
+          </div>
+          <span class="error-msg" id="email-error"></span>
+        </div>
+      </div>
 
-    <!-- Feedback Status Messages -->
-  <div id="form-status" class="form-status"></div>
-</form>
+      <!-- Row 2: Phone & Company -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-phone input-icon"></i>
+            <input type="tel" id="phone" name="phone" placeholder="+234 (012) 345-6789">
+          </div>
+          <span class="error-msg" id="phone-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="company">Company / Organization</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-building input-icon"></i>
+            <input type="text" id="company" name="company" placeholder="Acme Corp (Optional)">
+          </div>
+        </div>
+      </div>
+
+  <!-- Row 3: Inquiry Category, Preferred Contact Method & Contact Handle -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="service">Inquiry Category</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-layer-group input-icon"></i>
+            <select id="service" name="service">
+              <option value="General Inquiry">General Inquiry</option>
+              <option value="Technical Support">Technical Support</option>
+              <option value="Billing & Orders">Billing & Orders</option>
+              <option value="Project Quote">Project Quote / Sales</option>
+              <option value="Feedback">Feedback / Suggestions</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-arrow"></i>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contact-method">Preferred Contact Method</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-comments input-icon" id="contact-method-icon"></i>
+            <select id="contact-method" name="preferred_contact">
+              <option value="Email">Email</option>
+              <option value="Phone Call">Phone Call</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Telegram">Telegram</option>
+              <option value="SMS">SMS / Text Message</option>
+              <option value="Video Call">Video Call (Zoom / Meet)</option>
+            </select>
+            <i class="fa-solid fa-chevron-down select-arrow"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Contact Detail / Handle Field -->
+      <div class="form-group" id="contact-detail-group">
+        <label for="contact-detail" id="contact-detail-label">Preferred Email Address <span class="required">*</span></label>
+        <div class="input-icon-wrapper">
+          <i class="fa-regular fa-at input-icon" id="contact-detail-icon"></i>
+          <input type="text" id="contact-detail" name="contact_detail" placeholder="jane@example.com" required>
+        </div>
+        <span class="error-msg" id="contact-detail-error"></span>
+      </div>
+
+
+      <!-- Row 4: Priority Level (Radio Pills) -->
+      <div class="form-group">
+        <label>Priority Level</label>
+        <div class="priority-group">
+          <label class="priority-option">
+            <input type="radio" name="priority" value="Low">
+            <span><i class="fa-solid fa-circle priority-dot low"></i> Low</span>
+          </label>
+          <label class="priority-option">
+            <input type="radio" name="priority" value="Normal" checked>
+            <span><i class="fa-solid fa-circle priority-dot normal"></i> Normal</span>
+          </label>
+          <label class="priority-option">
+            <input type="radio" name="priority" value="High">
+            <span><i class="fa-solid fa-circle priority-dot high"></i> High / Urgent</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Row 5: Subject -->
+      <div class="form-group">
+        <label for="subject">Subject <span class="required">*</span></label>
+        <div class="input-icon-wrapper">
+          <i class="fa-regular fa-bookmark input-icon"></i>
+          <input type="text" id="subject" name="subject" placeholder="Briefly summarize your request" required>
+        </div>
+        <span class="error-msg" id="subject-error"></span>
+      </div>
+
+      <!-- Row 6: Message -->
+      <div class="form-group">
+        <label for="message">Your Message <span class="required">*</span></label>
+        <textarea id="message" name="message" rows="5" maxlength="500" placeholder="Write your message here..." required></textarea>
+        <div class="textarea-footer">
+          <span class="error-msg" id="message-error"></span>
+          <div class="char-counter"><span id="char-count">0</span> / 500</div>
+        </div>
+      </div>
+
+      <!-- Row 7: File Attachment -->
+      <div class="form-group">
+        <label for="attachment">Attachment <span class="optional-tag">(Optional - Max 5MB)</span></label>
+        <label class="file-upload-box" id="file-drop-area" for="attachment">
+          <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+          <div class="upload-text">
+            <span id="file-name">Click to upload or drag and drop</span>
+            <small>PNG, JPG, PDF, or DOCX up to 5MB</small>
+          </div>
+          <button type="button" id="remove-file-btn" class="remove-file-btn" title="Remove file" style="display: none;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" hidden>
+        </label>
+        <span class="error-msg" id="file-error"></span>
+      </div>
+
+      <!-- Row 8: Privacy Consent Checkbox -->
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="consent" name="consent" required>
+          <span class="custom-checkbox"></span>
+          <span>I agree to the processing of my personal data in accordance with the Privacy Policy. <span class="required">*</span></span>
+        </label>
+        <span class="error-msg" id="consent-error"></span>
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn">
+        <span class="btn-text">Send Message</span>
+        <i class="fa-solid fa-paper-plane btn-icon"></i>
+      </button>
+
+      <!-- Feedback Status Messages -->
+      <div id="form-status" class="form-status" role="alert"></div>
+    </form>
   </div>
 
   <script src="script.js"></script>
