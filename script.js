@@ -436,3 +436,55 @@ window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
   console.log('PWA was successfully installed');
 });
+
+
+// LIGHT AND DARK MODE //
+document.addEventListener('DOMContentLoaded', () => {
+  const themeCheckbox = document.getElementById('theme-checkbox');
+  const themeStatusBadge = document.getElementById('theme-status');
+  const systemPrefText = document.getElementById('system-pref-text');
+  const resetThemeBtn = document.getElementById('reset-theme-btn');
+  const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const setTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    themeCheckbox.checked = (theme === 'dark');
+    if (themeStatusBadge) {
+      themeStatusBadge.textContent = theme === 'dark' ? 'Dark Mode Active' : 'Light Mode Active';
+    }
+  };
+  const initTheme = () => {
+    const savedTheme = getStoredTheme();
+    
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      const systemTheme = systemThemeQuery.matches ? 'dark' : 'light';
+      setTheme(systemTheme);
+    }
+    updateSystemPrefText();
+  };
+  const updateSystemPrefText = () => {
+    if (systemPrefText) {
+      const isDark = systemThemeQuery.matches;
+      systemPrefText.textContent = `OS Preference: ${isDark ? 'Dark' : 'Light'}`;
+    }
+  };
+  themeCheckbox.addEventListener('change', (e) => {
+    const newTheme = e.target.checked ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+  resetThemeBtn.addEventListener('click', () => {
+    localStorage.removeItem('theme');
+    const systemTheme = systemThemeQuery.matches ? 'dark' : 'light';
+    setTheme(systemTheme);
+  });
+  systemThemeQuery.addEventListener('change', (e) => {
+    updateSystemPrefText();
+    if (!getStoredTheme()) {
+      setTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+  initTheme();
+});
